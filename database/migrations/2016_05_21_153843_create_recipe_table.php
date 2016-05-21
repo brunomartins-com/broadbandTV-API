@@ -14,6 +14,7 @@ class CreateRecipeTable extends Migration
     {
         Schema::create('recipe', function (Blueprint $table) {
             $table->increments('id');
+            $table->unique('id');
             $table->string('name', 145);
             $table->timestamps();
         });

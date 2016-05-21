@@ -14,6 +14,7 @@ class CreateLogTable extends Migration
     {
         Schema::create('log', function (Blueprint $table) {
             $table->increments('id');
+            $table->unique('id');
             $table->string('action', 145);
             $table->char('api_key', 32);
             $table->string('entity_name', 100);

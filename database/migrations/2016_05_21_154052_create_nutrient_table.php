@@ -14,6 +14,7 @@ class CreateNutrientTable extends Migration
     {
         Schema::create('nutrient', function (Blueprint $table) {
             $table->increments('id');
+            $table->unique('id');
             $table->integer('ingredient_id')->unsigned();
             $table->integer('nutrient_id')->unsigned();
             $table->foreign('ingredient_id')->references('id')->on('ingredient');
@@ -27,7 +28,8 @@ class CreateNutrientTable extends Migration
      */
     public function down()
     {
-        Schema::dropForeign('nutrient_ingredient_id_foreign');
-        Schema::drop('nutrient');
+        Schema::drop('nutrient', function (Blueprint $table) {
+            $table->dropForeign('nutrient_ingredient_id_foreign');
+        });
     }
 }

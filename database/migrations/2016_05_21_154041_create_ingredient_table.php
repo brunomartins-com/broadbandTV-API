@@ -20,6 +20,7 @@ class CreateIngredientTable extends Migration
             $table->decimal('quantity', 10, 2);
             $table->string('unit', 145);
             $table->foreign('recipe_id')->references('id')->on('recipe');
+            $table->unique('id', 'name');
         });
     }
 
@@ -30,7 +31,8 @@ class CreateIngredientTable extends Migration
      */
     public function down()
     {
-        Schema::dropForeign('ingredient_recipe_id_foreign');
-        Schema::drop('ingredient');
+        Schema::drop('ingredient', function (Blueprint $table) {
+            $table->dropForeign('ingredient_recipe_id_foreign');
+        });
     }
 }
