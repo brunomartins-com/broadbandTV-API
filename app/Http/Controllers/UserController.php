@@ -16,7 +16,7 @@ class UserController extends Controller
         $this->user = $user;
     }
 
-    public function getUsers()
+    public function getList()
     {
         $users = $this->user
             ->orderBy('email', 'ASC')
