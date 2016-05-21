@@ -20,7 +20,7 @@ class CreateIngredientTable extends Migration
             $table->decimal('quantity', 10, 2);
             $table->string('unit', 145);
             $table->foreign('recipe_id')->references('id')->on('recipe');
-            $table->unique('id', 'name');
+            $table->unique(['id', 'name']);
         });
     }
 

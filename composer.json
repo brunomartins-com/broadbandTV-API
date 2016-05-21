@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "broadbandTV/api",
+    "description": "Meal Nutrition API",
+    "keywords": ["BroadBandTV", "API", "Laravel", "framework", "VanHack", "hackathon", "Canada", "Meal", "Nutrition", "USDA"],
     "license": "MIT",
     "type": "project",
     "require": {

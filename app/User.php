@@ -2,25 +2,31 @@
 
 namespace App;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class User extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $table = "user";
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    public function exists($email)
+    {
+        $userCount = $this->where('email', '=', $email)->count();
+
+        if ($userCount > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function generateKey($email)
+    {
+        $key = str_random(32);
+        $keyCount = $this->where('key', '=', $key)->count();
+        if($keyCount > 0)
+        {
+            $this->generateKey($email);
+        }
+        return $key;
+    }
 }
