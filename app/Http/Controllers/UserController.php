@@ -61,4 +61,10 @@ class UserController extends Controller
 
         return json_encode($response);
     }
+
+    public function showKeyError()
+    {
+        $response = ['status' => false, 'message' => 'Invalid Key'];
+        return json_encode($response);
+    }
 }
