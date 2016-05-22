@@ -12,6 +12,6 @@ class Ingredient extends Model
     // FUNCTION FOR GET RECIPE
     public function getRecipe()
     {
-        return $this->belongsTo('App\Recipe');
+        return $this->belongsTo('App\Recipe', 'recipe_id', 'id');
     }
 }

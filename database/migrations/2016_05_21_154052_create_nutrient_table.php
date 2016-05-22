@@ -17,6 +17,7 @@ class CreateNutrientTable extends Migration
             $table->unique('id');
             $table->integer('ingredient_id')->unsigned();
             $table->integer('nutrient_id')->unsigned();
+            $table->timestamps();
             $table->foreign('ingredient_id')->references('id')->on('ingredient');
         });
     }

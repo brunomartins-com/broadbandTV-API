@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 use App\Ingredient;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use App\Http\Requests;
 
@@ -25,14 +26,46 @@ class IngredientController extends Controller
 
     public function getList(Request $request)
     {
-        $ingredients = $this->ingredient
-            ->where('recipe_id', '=', $request->recipe_id)
-            ->orderBy('name', 'ASC')
-            ->get();
+        $type = isset($request->type) ? $request->type : "b";
+
+        $all_request = $request->all();
+        if(array_has($all_request, 'type'))
+        {
+            unset($all_request['type']);
+        }
+        if(count($all_request) <= 1)
+        {
+            return json_encode(['status' => false, 'message' => 'At least one information is required.']);
+        }
+
+        $ingredients = $this->ingredient->orderBy('name', 'ASC');
+
+        if($request->has('name'))
+        {
+            $ingredients = $ingredients->where('name', 'like', '%'.$request->name.'%');
+        }
+        if($request->has('ndbno'))
+        {
+            $ingredients = $ingredients->where('ndbno', '=', $request->ndbno);
+        }
+        if($request->has('id'))
+        {
+            $ingredients = $ingredients->where('id', '=', $request->id);
+        }
+
+        $ingredients = $ingredients->get();
 
         if(count($ingredients) == 0)
         {
             return json_encode(['status' => true, 'message' => 'You do not have ingredients for your recipe yet.']);
+        }
+
+        if($type == 'f')
+        {
+            foreach ($ingredients as $ingredient)
+            {
+                array_set($ingredient, 'get_recipe', $ingredient->getRecipe);
+            }
         }
 
         return json_encode($ingredients);
@@ -48,13 +81,13 @@ class IngredientController extends Controller
     public function postAdd(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:145',
-            'recipeId' => 'required|integer|exists:recipe,id',
-            'ndbno' => "required|max:5",
-            'quantity' => 'required|regex:/^\d*(\.\d{0,2})?$/', 
-            'unit' => 'required|max:145',
+            'name'      => 'required|max:145',
+            'recipeId'  => 'required|integer|exists:recipe,id',
+            'ndbno'     => "required|max:5",
+            'quantity'  => 'required|regex:/^\d*(\.\d{0,2})?$/',
+            'unit'      => 'required|max:145',
         ], [
-            'exists' => 'The selected Recipe does not exist!'
+            'exists'    => 'The selected Recipe does not exist!'
         ]);
 
         if ($validator->fails()) {
@@ -84,17 +117,19 @@ class IngredientController extends Controller
             foreach ($arrIngredient['report']['food']['nutrients'] as $nutrientInfo)
             {
                 $nutrient[] = [
-                    'nutrient_id' => $nutrientInfo['nutrient_id'],
-                    'ingredient_id' => $ingredient->id
+                    'nutrient_id'   => $nutrientInfo['nutrient_id'],
+                    'ingredient_id' => $ingredient->id,
+                    'created_at'    => Carbon::now()->format('Y-m-d H:i:s'),
+                    'updated_at'    => Carbon::now()->format('Y-m-d H:i:s')
                 ];
             }
 
             $this->nutrient->insert($nutrient);
 
             $response = [
-                'status' => true,
-                'message' => 'Ingredient added successfully!',
-                'id' => $ingredient->id
+                'status'    => true,
+                'message'   => 'Ingredient added successfully!',
+                'id'        => $ingredient->id
             ];
         }
 
@@ -111,11 +146,11 @@ class IngredientController extends Controller
     public function putEdit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required|integer|exists:ingredient,id',
-            'quantity' => 'required|regex:/^\d*(\.\d{0,2})?$/',
-            'unit' => 'required|max:145',
+            'id'        => 'required|integer|exists:ingredient,id',
+            'quantity'  => 'required|regex:/^\d*(\.\d{0,2})?$/',
+            'unit'      => 'required|max:145',
         ], [
-            'exists' => 'The selected Ingredient does not exist in any recipe!'
+            'exists'    => 'The selected Ingredient does not exist in any recipe!'
         ]);
 
         if ($validator->fails()) {
@@ -145,9 +180,9 @@ class IngredientController extends Controller
         $response = [];
 
         $validator = Validator::make($request->all(), [
-            'id' => 'required|integer|exists:ingredient,id',
+            'id'        => 'required|integer|exists:ingredient,id',
         ], [
-            'exists' => 'Selected Ingredient does not exist in any recipe to be deleted!'
+            'exists'    => 'Selected Ingredient does not exist in any recipe to be deleted!'
         ]);
 
         if ($validator->fails()) {
@@ -156,6 +191,10 @@ class IngredientController extends Controller
         }
 
         try {
+            $this->nutrient
+                ->where('ingredient_id', '=', $request->id)
+                ->delete();
+
             $this->ingredient
                 ->where('id', '=', $request->id)
                 ->delete();
