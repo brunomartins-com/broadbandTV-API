@@ -11,27 +11,28 @@
 **Using**
 
 1. Create User:
-
+```bash
     URL: api/user/add
-
-    Parameters:
+        Parameters:
         Email
     Return:
         Key
+```
 
 __Store “key” to use as authentication__
 
 2. Create a Recipe:
-
+```bash
     URL: api/recipe/add
 	Parameters:
 		key (Returned on Step 1)
 		name
 	Return:
 		Id (It is the Recipe ID)
+```
 
 3. Add Ingredients (As much as you want)
-
+```bash
     URL: api/ingredient/add
     Parameters:
 		key (Returned on Step 1)
@@ -41,15 +42,17 @@ __Store “key” to use as authentication__
         unit
 	Return:
 		Id (It is the Ingredient ID)
+```
 
 4. Check your Recipe Report
-
+```bash
     URL: api/recipe/get
     Parameters:
 		key (Returned on Step 1)
 		id (Recipe ID - Returned on Step 2)
 	Return:
 		Recipe Report
+```
 
 5. Other Options (Have a look to documentation to see all parameters)
 ```bash
