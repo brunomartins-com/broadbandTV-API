@@ -1,19 +1,14 @@
 <?php
 
-use App\Libraries\Usda;
-
 Route::get('/', function () {
-
-    $usda = new Usda();
-   
-    $report = $usda->getIngredientInfo('01008');
-
-    echo $report;
-
-    //return view('welcome');
+    return json_encode(['status' => true, 'message' => '404 Error! Page not found']);
 });
 
 Route::group(['prefix' => 'api'], function() {
+
+    Route::get('/', function () {
+        return json_encode(['status' => true, 'message' => '404 Error! Page not found']);
+    });
 
     Route::group(['prefix' => 'user'], function() {
         Route::get('list', 'UserController@getList');

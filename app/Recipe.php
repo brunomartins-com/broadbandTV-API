@@ -60,19 +60,17 @@ class Recipe extends Model
     public function getRecipe($id)
     {
         $usda = New Usda();
-        $strSQL = 'select 
-                        r.name as recipe_name,
-                        i.name as ingredient_name,
-                        i.id as ingredient_id,
-                        i.ndbno,
-                        i.quantity,
-                        i.unit
-                    from recipe r 
-                    join ingredient i on i.recipe_id = r.id
-                    where 
-	                  r.id = :id';
 
-        $rec = DB::select($strSQL, ['id' => $id]);
+        $rec = $this->addSelect('recipe.name AS recipe_name')
+            ->addSelect('ingredient.name AS ingredient_name')
+            ->addSelect('ingredient.id AS ingredient_id')
+            ->addSelect('ingredient.ndbno')
+            ->addSelect('ingredient.quantity')
+            ->addSelect('ingredient.unit')
+            ->join('ingredient', 'ingredient.recipe_id', '=', 'recipe.id')
+            ->where('recipe.id', '=', $id)
+            ->get();
+
         $recipe = [];
         foreach ($rec as $fullRecipe)
         {
