@@ -1,15 +1,16 @@
 **Installing**
 
-*Create a database (You can choose the name)
-*Exec data.sql file to create tables
-*Unzip bbtv.zip to your root folder
-*Edit “/.env” File Setting your database information
+* Create a database (You can choose the name)
+* Exec data.sql file to create tables
+* Unzip bbtv.zip to your root folder
+* Edit “/.env” File Setting your database information
 * The “Public” folder is the application root
 
 **If you want to use your own USDA Key, just edit “.env” file changing “USDA_KEY”**
 
- Using
-1 Create User:
+**Using**
+
+1. Create User:
 	URL: api/user/add
 	Parameters:
 		Email
