@@ -14,9 +14,9 @@
 ```bash
     URL: api/user/add
         Parameters:
-        Email
+        email
     Return:
-        Key
+        key
 ```
 
 __Store “key” to use as authentication__
@@ -28,7 +28,7 @@ __Store “key” to use as authentication__
 		key (Returned on Step 1)
 		name
 	Return:
-		Id (It is the Recipe ID)
+		id (It is the Recipe ID)
 ```
 
 3. Add Ingredients (As much as you want)
@@ -41,7 +41,7 @@ __Store “key” to use as authentication__
         quantity
         unit
 	Return:
-		Id (It is the Ingredient ID)
+		id (It is the Ingredient ID)
 ```
 
 4. Check your Recipe Report
