@@ -15,10 +15,12 @@ use App\Http\Requests;
 class IngredientController extends Controller
 {
     private $ingredient;
+    private $nutrient;
 
-    public function __construct(Ingredient $ingredient)
+    public function __construct(Ingredient $ingredient, Nutrient $nutrient)
     {
         $this->ingredient = $ingredient;
+        $this->nutrient = $nutrient;
     }
 
     public function getList(Request $request)
@@ -49,7 +51,7 @@ class IngredientController extends Controller
             'name' => 'required|max:145',
             'recipeId' => 'required|integer|exists:recipe,id',
             'ndbno' => "required|max:5",
-            'quantity' => 'required|max:145', //TODO: Change to decimal (maybe using regex)
+            'quantity' => 'required|regex:/^\d*(\.\d{0,2})?$/', 
             'unit' => 'required|max:145',
         ], [
             'exists' => 'The selected Recipe does not exist!'
@@ -79,15 +81,15 @@ class IngredientController extends Controller
             $ingredient->unit = $request->unit;
             $ingredient->save();
 
-            foreach ($arrIngredient['report']['food']['nutrients'] as $nutrient)
+            foreach ($arrIngredient['report']['food']['nutrients'] as $nutrientInfo)
             {
                 $nutrient[] = [
-                    'nutrient_id' => $nutrient['nutrient_id'],
+                    'nutrient_id' => $nutrientInfo['nutrient_id'],
                     'ingredient_id' => $ingredient->id
                 ];
             }
 
-            //TODO:Inserir os ingredientes
+            $this->nutrient->insert($nutrient);
 
             $response = [
                 'status' => true,
@@ -110,7 +112,7 @@ class IngredientController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required|integer|exists:ingredient,id',
-            'quantity' => 'required|max:145', //TODO: Change to decimal (maybe using regex)
+            'quantity' => 'required|regex:/^\d*(\.\d{0,2})?$/',
             'unit' => 'required|max:145',
         ], [
             'exists' => 'The selected Ingredient does not exist in any recipe!'
