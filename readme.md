@@ -1,4 +1,4 @@
-*Installing*
+**Installing**
 	Create a database (You can choose the name)
 	Exec data.sql file to create tables
 	Unzip bbtv.zip to your root folder
