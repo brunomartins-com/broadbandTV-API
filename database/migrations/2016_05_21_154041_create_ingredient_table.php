@@ -19,6 +19,7 @@ class CreateIngredientTable extends Migration
             $table->string('name', 145);
             $table->decimal('quantity', 10, 2);
             $table->string('unit', 145);
+            $table->timestamps();
             $table->foreign('recipe_id')->references('id')->on('recipe');
             $table->unique(['id', 'name']);
         });
