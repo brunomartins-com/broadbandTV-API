@@ -18,6 +18,7 @@ class CreateLogTable extends Migration
             $table->string('action', 145);
             $table->char('key', 32);
             $table->string('entity_name', 100);
+            $table->string('entity_method', 100);
             $table->integer('entity_id')->unsigned();
             $table->timestamps();
         });

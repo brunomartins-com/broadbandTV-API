@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libraries\Errors;
+use App\Log;
 use Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -12,10 +13,12 @@ use App\Http\Requests;
 class RecipeController extends Controller
 {
     private $recipe;
+    private $log;
 
-    public function __construct(Recipe $recipe)
+    public function __construct(Recipe $recipe, Log $log)
     {
-        $this->recipe = $recipe;
+        $this->recipe   = $recipe;
+        $this->log      = $log;
     }
 
     /**
@@ -29,8 +32,7 @@ class RecipeController extends Controller
     {
         $recipes = $this->recipe->getAll($request->key);
 
-        if(count($recipes) == 0)
-        {
+        if(count($recipes) == 0) {
             return json_encode(['status' => true, 'message' => 'You do not have recipe yet.']);
         }
 
@@ -101,7 +103,14 @@ class RecipeController extends Controller
         $recipe->key    = $key;
         $recipe->save();
 
-        $response = ['status' => true, 'message' => 'Recipe added successfully!', 'id' => $recipe->id];
+        $response = [
+            'status'    => true,
+            'message'   => 'Recipe added successfully!',
+            'id'        => $recipe->id
+        ];
+
+        // Record log
+        $this->log->logAdd($response['message'], $key, __CLASS__, __METHOD__, $recipe->id);
 
         return json_encode($response);
     }
@@ -142,7 +151,13 @@ class RecipeController extends Controller
         $recipe->name   = $name;
         $recipe->save();
 
-        $response = ['status' => true, 'message' => 'Recipe was edited successfully!'];
+        $response = [
+            'status'    => true,
+            'message'   => 'Recipe was edited successfully!'
+        ];
+
+        // Record log
+        $this->log->logAdd($response['message'], $key, __CLASS__, __METHOD__, $id);
 
         return json_encode($response);
     }
@@ -170,6 +185,10 @@ class RecipeController extends Controller
         }
 
         try {
+            $this->ingredient
+                ->where('recipe_id', '=', $request->id)
+                ->delete();
+            
             $this->recipe
                 ->where('id', '=', $request->id)
                 ->where('key', '=', $request->key)
@@ -179,7 +198,14 @@ class RecipeController extends Controller
             return json_encode($response);
         }
 
-        $response = ['status' => true, 'message' => 'Recipe was deleted successfully!'];
+        $response = [
+            'status'    => true,
+            'message'   => 'Recipe was deleted successfully!'
+        ];
+
+        // Record log
+        $this->log->logAdd($response['message'], $request->key, __CLASS__, __METHOD__, $request->id);
+
         return json_encode($response);
     }
 }

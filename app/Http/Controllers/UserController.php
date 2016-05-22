@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Log;
 use Validator;
 use App\User;
 use Illuminate\Http\Request;
@@ -10,10 +11,12 @@ use App\Http\Requests;
 class UserController extends Controller
 {
     private $user;
+    private $log;
 
-    public function __construct(User $user)
+    public function __construct(User $user, Log $log)
     {
         $this->user = $user;
+        $this->log  = $log;
     }
 
     /**
@@ -37,7 +40,6 @@ class UserController extends Controller
     public function postAdd(Request $request)
     {
         $response = [];
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:145',
         ]);
@@ -49,24 +51,29 @@ class UserController extends Controller
 
         $email = $request->email;
 
-        if(empty($email))
-        {
+        if(empty($email)) {
             $response = ['status' => false, 'message' => 'The email is required.'];
             return json_encode($response);
         }
 
-        if($this->user->exists($email))
-        {
+        if($this->user->exists($email)) {
             $response = ['status' => false, 'message' => 'The user '.$email.' already exist in database.'];
             return json_encode($response);
         }
 
-        $user = new $this->user;
-        $user->email = $email;
-        $user->key = $this->user->generateKey();
+        $user           = new $this->user;
+        $user->email    = $email;
+        $user->key      = $this->user->generateKey();
         $user->save();
 
-        $response = ['status' => true, 'message' => 'User created successfully!', 'key' => $user->key];
+        $response = [
+            'status'    => true,
+            'message'   => 'User created successfully!',
+            'key'       => $user->key
+        ];
+
+        // Record log
+        $this->log->logAdd($response['message'], $user->key, __CLASS__, __METHOD__, $user->id);
 
         return json_encode($response);
     }
