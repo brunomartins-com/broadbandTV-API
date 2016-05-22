@@ -74,8 +74,7 @@ class IngredientController extends Controller
     {
         $response = [];
         $validator = Validator::make($request->all(), [
-            'name'      => 'required|max:145',
-            'recipeId'  => 'required|integer|exists:recipe,id',
+            'recipe_id' => 'required|integer|exists:recipe,id',
             'ndbno'     => "required|max:5",
             'quantity'  => 'required|regex:/^\d*(\.\d{0,2})?$/',
             'unit'      => 'required|max:145',
@@ -101,7 +100,7 @@ class IngredientController extends Controller
 
             $ingredient = new $this->ingredient;
             $ingredient->name = $arrIngredient['report']['food']['name'];
-            $ingredient->recipe_id = $request->recipeId;
+            $ingredient->recipe_id = $request->recipe_id;
             $ingredient->ndbno = $request->ndbno;
             $ingredient->quantity = $request->quantity;
             $ingredient->unit = $request->unit;

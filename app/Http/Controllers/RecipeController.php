@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ingredient;
 use App\Libraries\Errors;
 use App\Log;
 use Validator;
@@ -13,12 +14,14 @@ use App\Http\Requests;
 class RecipeController extends Controller
 {
     private $recipe;
+    private $ingredient;
     private $log;
 
-    public function __construct(Recipe $recipe, Log $log)
+    public function __construct(Recipe $recipe, Ingredient $ingredient, Log $log)
     {
-        $this->recipe   = $recipe;
-        $this->log      = $log;
+        $this->recipe       = $recipe;
+        $this->ingredient   = $ingredient;
+        $this->log          = $log;
     }
 
     /**
@@ -81,8 +84,8 @@ class RecipeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $response = ['status' => false, 'message' => 'The name is required.'];
-            return json_encode($response);
+            $errors = new Errors();
+            return $errors->getAsJSON($validator);
         }
 
         $name           = $request->name;
@@ -125,12 +128,13 @@ class RecipeController extends Controller
     public function putEdit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:145',
+            'id'    => 'required|integer',
+            'name'  => 'required|max:145',
         ]);
 
         if ($validator->fails()) {
-            $response = ['status' => false, 'message' => 'The name is required.'];
-            return json_encode($response);
+            $errors = new Errors();
+            return $errors->getAsJSON($validator);
         }
 
         $id             = $request->id;
