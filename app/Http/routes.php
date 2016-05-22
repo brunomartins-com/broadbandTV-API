@@ -1,7 +1,16 @@
 <?php
 
+use App\Libraries\Usda;
+
 Route::get('/', function () {
-    return view('welcome');
+
+    $usda = new Usda();
+   
+    $report = $usda->getIngredientInfo('01008');
+
+    echo $report;
+
+    //return view('welcome');
 });
 
 Route::group(['prefix' => 'api'], function() {
