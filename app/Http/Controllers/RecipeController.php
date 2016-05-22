@@ -17,12 +17,16 @@ class RecipeController extends Controller
         $this->recipe = $recipe;
     }
 
+    /**
+     * Get all recipes from a user
+     *
+     * @param Request
+     *
+     * @return json
+     */
     public function getList(Request $request)
     {
-        $recipes = $this->recipe
-            ->where('key', '=', $request->key)
-            ->orderBy('name', 'ASC')
-            ->get();
+        $recipes = $this->recipe->getAll($request->key);
 
         if(count($recipes) == 0)
         {
@@ -32,6 +36,13 @@ class RecipeController extends Controller
         return json_encode($recipes);
     }
 
+    /**
+     * Add a new recipe for user
+     *
+     * @param Request
+     *
+     * @return json
+     */
     public function postAdd(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -66,6 +77,13 @@ class RecipeController extends Controller
         return json_encode($response);
     }
 
+    /**
+     * Edit a recipe
+     *
+     * @param Request
+     *
+     * @return json
+     */
     public function putEdit(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -99,7 +117,14 @@ class RecipeController extends Controller
 
         return json_encode($response);
     }
-    
+
+    /**
+     * Delete user's recipe
+     *
+     * @param Request
+     *
+     * @return json
+     */
     public function delete(Request $request)
     {
         $id             = $request->id;

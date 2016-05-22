@@ -16,15 +16,24 @@ class UserController extends Controller
         $this->user = $user;
     }
 
+    /**
+     * Get all users
+     *
+     * @return json
+     */
     public function getList()
     {
-        $users = $this->user
-            ->orderBy('email', 'ASC')
-            ->get();
-
+        $users = $this->user->getAll();
         return json_encode($users);
     }
 
+    /**
+     * Add new user and return it's key
+     *
+     * @param Request
+     *
+     * @return json
+     */
     public function postAdd(Request $request)
     {
         $response = [];
@@ -54,7 +63,7 @@ class UserController extends Controller
 
         $user = new $this->user;
         $user->email = $email;
-        $user->key = $this->user->generateKey($email);
+        $user->key = $this->user->generateKey();
         $user->save();
 
         $response = ['status' => true, 'message' => 'User created successfully!', 'key' => $user->key];
@@ -62,6 +71,11 @@ class UserController extends Controller
         return json_encode($response);
     }
 
+    /**
+     * Return a error when middleware identify that the key is unavailable
+     *
+     * @return json
+     */
     public function showKeyError()
     {
         $response = ['status' => false, 'message' => 'Invalid Key'];

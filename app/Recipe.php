@@ -2,12 +2,22 @@
 
 namespace App;
 
+use Faker\UniqueGenerator;
 use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
     protected $table = "recipe";
 
+    /**
+     * Check if Recipe already exists for especified user
+     *
+     * @param Name of Recipe
+     * @param User Unique Key
+     * @param Recipe ID
+     * 
+     * @return bool
+     */
     public function exists($name, $key, $id = null)
     {
         $recipeCount = $this->where('name', '=', $name)->where('key', '=', $key);
@@ -22,6 +32,20 @@ class Recipe extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Get all recipes from user (identified by key)
+     *
+     * @param User Unique Key
+     *
+     * @return mixed
+     */
+    public function getAll($key)
+    {
+        return $this->where('key', '=', $key)
+            ->orderBy('name', 'ASC')
+            ->get();
     }
 
     // FUNCTION FOR GET INGREDIENTS
