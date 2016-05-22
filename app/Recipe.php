@@ -49,8 +49,15 @@ class Recipe extends Model
             ->orderBy('name', 'ASC')
             ->get();
     }
-    
-    public function getRecipe($key, $id)
+
+    /**
+     * Get Recipe Full Information
+     *
+     * @param Recipe ID
+     * 
+     * @return array
+     */
+    public function getRecipe($id)
     {
         $usda = New Usda();
         $strSQL = 'select 
@@ -59,29 +66,21 @@ class Recipe extends Model
                         i.id as ingredient_id,
                         i.ndbno,
                         i.quantity,
-                        i.unit,
-                        n.nutrient_id
+                        i.unit
                     from recipe r 
                     join ingredient i on i.recipe_id = r.id
-                    join nutrient n on n.ingredient_id = i.id
                     where 
 	                  r.id = :id';
 
         $rec = DB::select($strSQL, ['id' => $id]);
         $recipe = [];
-        $i = 1;
         foreach ($rec as $fullRecipe)
         {
             $recipe['name'] = $fullRecipe->recipe_name;
-            //if ($i == 1)
-                $recipe['ingredients'][$fullRecipe->ingredient_id] = $usda->getIngredientInfo($fullRecipe->ndbno);
-
-            $i++;
-            //dd($recipe);
-            //$nutrients[] = $fullRecipe->nutrient_id;
+            $recipe['ingredients'][$fullRecipe->ingredient_id] = $usda->getIngredientInfo($fullRecipe->ndbno);
         }
-    dd($recipe);
-        //$usda->getNutritionInfo($nutrients);
+
+        return $recipe;
     }
 
     // FUNCTION FOR GET INGREDIENTS

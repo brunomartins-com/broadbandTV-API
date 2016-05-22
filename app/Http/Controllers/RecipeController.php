@@ -37,6 +37,13 @@ class RecipeController extends Controller
         return json_encode($recipes);
     }
 
+    /**
+     * Get Full Report about Recipe
+     *
+     * @param Request
+     *
+     * @return json
+     */
     public function getRecipe(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -48,7 +55,14 @@ class RecipeController extends Controller
             return $errors->getAsJSON($validator);
         }
 
-        $this->recipe->getRecipe($request->key, $request->id);
+        $recipeInfo = $this->recipe->getRecipe($request->id);
+
+        if (count($recipeInfo) == 0)
+        {
+            return json_encode(['status' => false, 'message' => 'Recipe not found.']);
+        }
+
+        return json_encode(['status' => true, 'recipeInfo' => $recipeInfo]);
     }
 
     /**
