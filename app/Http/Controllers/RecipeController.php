@@ -178,7 +178,7 @@ class RecipeController extends Controller
         $response = [];
 
         $validator = Validator::make($request->all(), [
-            'id' => 'required|integer|exists:ingredient,id',
+            'id' => 'required|integer|exists:recipe,id',
         ], [
             'exists' => 'Selected Recipe does not exist to be deleted!'
         ]);
