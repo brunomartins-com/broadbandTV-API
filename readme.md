@@ -1,27 +1,71 @@
-# Laravel PHP Framework
+**Installing**
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+1. Create a database (You can choose the name)
+2. Exec data.sql file to create tables
+3. Unzip bbtv.zip to your root folder
+4. Edit “/.env” File Setting your database information
+5. The “Public” folder is the application root
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+**If you want to use your own USDA Key, just edit “.env” file changing “USDA_KEY”**
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+**Using**
 
-## Official Documentation
+1. Create User:
+```bash
+    URL: api/user/add
+        Parameters:
+        Email
+    Return:
+        Key
+```
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+__Store “key” to use as authentication__
 
-## Contributing
+2. Create a Recipe:
+```bash
+    URL: api/recipe/add
+	Parameters:
+		key (Returned on Step 1)
+		name
+	Return:
+		Id (It is the Recipe ID)
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+3. Add Ingredients (As much as you want)
+```bash
+    URL: api/ingredient/add
+    Parameters:
+		key (Returned on Step 1)
+		recipe_id (Returned on Step 2)
+        ndbno
+        quantity
+        unit
+	Return:
+		Id (It is the Ingredient ID)
+```
 
-## Security Vulnerabilities
+4. Check your Recipe Report
+```bash
+    URL: api/recipe/get
+    Parameters:
+		key (Returned on Step 1)
+		id (Recipe ID - Returned on Step 2)
+	Return:
+		Recipe Report
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+5. Other Options (Have a look to documentation to see all parameters)
+```bash
+    User:
+        List - api/user/list
 
-## License
+    Recipe:
+		List - api/recipe/list
+		Edit - api/recipe/edit
+		Delete - api/recipe/delete
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+	Ingredient:
+		List - api/ingredient/list
+		Edit - api/ingredient/edit
+		Delete - api/ingredient/delete
+```
