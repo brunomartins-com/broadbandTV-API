@@ -12,17 +12,17 @@
 
 1. Create User:
 
-	URL: api/user/add
-	Parameters:
-		Email
-	Return:
-		Key
+    URL: api/user/add
+    Parameters:
+        Email
+    Return:
+        Key
 
 __Store “key” to use as authentication__
 
 2. Create a Recipe:
 
-	URL: api/recipe/add
+    URL: api/recipe/add
 	Parameters:
 		key (Returned on Step 1)
 		name
@@ -31,8 +31,8 @@ __Store “key” to use as authentication__
 
 3. Add Ingredients (As much as you want)
 
-	URL: api/ingredient/add
-	Parameters:
+    URL: api/ingredient/add
+    Parameters:
 		key (Returned on Step 1)
 		recipe_id (Returned on Step 2)
         ndbno
@@ -43,8 +43,8 @@ __Store “key” to use as authentication__
 
 4. Check your Recipe Report
 
-URL: api/recipe/get
-	Parameters:
+    URL: api/recipe/get
+    Parameters:
 		key (Returned on Step 1)
 		id (Recipe ID - Returned on Step 2)
 	Return:
@@ -52,16 +52,15 @@ URL: api/recipe/get
 
 5. Other Options (Have a look to documentation to see all parameters)
 
-	**User:**
+    User:
+        List - api/user/list
 
-List - api/user/list
-
-    **Recipe:**
+    Recipe:
 		List - api/recipe/list
 		Edit - api/recipe/edit
 		Delete - api/recipe/delete
 
-	**Ingredient:**
+	Ingredient:
 		List - api/ingredient/list
 		Edit - api/ingredient/edit
 		Delete - api/ingredient/delete
