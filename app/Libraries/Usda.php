@@ -86,7 +86,7 @@ class Usda
      *
      * @param USDA ID of ingredient
      *
-     * @return json
+     * @return json|false
      */
     public function getIngredientInfo($ingredientUSDAID)
     {
@@ -96,7 +96,14 @@ class Usda
             'api_key' => $this->apiKey
         ];
         $url = $this->reportURL.http_build_query($params);
-        return $this->execCURL($url);
+        $ingredientInfo = json_decode($this->execCURL($url), true);
+
+        if (key_exists('errors', $ingredientInfo))
+        {
+            return false;
+        }
+
+        return $ingredientInfo;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Libraries\Errors;
 use Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -113,7 +114,7 @@ class RecipeController extends Controller
         $recipe->name   = $name;
         $recipe->save();
 
-        $response = ['status' => true, 'message' => 'Recipe edited successfully!'];
+        $response = ['status' => true, 'message' => 'Recipe was edited successfully!'];
 
         return json_encode($response);
     }
@@ -127,22 +128,30 @@ class RecipeController extends Controller
      */
     public function delete(Request $request)
     {
-        $id             = $request->id;
-        $key            = $request->key;
-
         $response = [];
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:ingredient,id',
+        ], [
+            'exists' => 'Selected Recipe does not exist to be deleted!'
+        ]);
+
+        if ($validator->fails()) {
+            $errors = new Errors();
+            return $errors->getAsJSON($validator);
+        }
 
         try {
             $this->recipe
-                ->where('id', '=', $id)
-                ->where('key', '=', $key)
+                ->where('id', '=', $request->id)
+                ->where('key', '=', $request->key)
                 ->delete();
         }catch (QueryException $e){
             $response = ['status' => false, 'message' => 'An error occurred while deleting.'];
             return json_encode($response);
         }
 
-        $response = ['status' => true, 'message' => 'Recipe deleted successfully!'];
+        $response = ['status' => true, 'message' => 'Recipe was deleted successfully!'];
         return json_encode($response);
     }
 }
