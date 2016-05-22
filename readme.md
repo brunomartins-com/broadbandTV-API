@@ -13,6 +13,7 @@
 1. Create User:
 
     URL: api/user/add
+
     Parameters:
         Email
     Return:
@@ -51,7 +52,7 @@ __Store “key” to use as authentication__
 		Recipe Report
 
 5. Other Options (Have a look to documentation to see all parameters)
-
+```bash
     User:
         List - api/user/list
 
@@ -64,3 +65,4 @@ __Store “key” to use as authentication__
 		List - api/ingredient/list
 		Edit - api/ingredient/edit
 		Delete - api/ingredient/delete
+```
