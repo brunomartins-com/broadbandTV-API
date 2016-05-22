@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Libraries\Usda;
 use Faker\UniqueGenerator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Recipe extends Model
 {
@@ -46,6 +48,40 @@ class Recipe extends Model
         return $this->where('key', '=', $key)
             ->orderBy('name', 'ASC')
             ->get();
+    }
+    
+    public function getRecipe($key, $id)
+    {
+        $usda = New Usda();
+        $strSQL = 'select 
+                        r.name as recipe_name,
+                        i.name as ingredient_name,
+                        i.id as ingredient_id,
+                        i.ndbno,
+                        i.quantity,
+                        i.unit,
+                        n.nutrient_id
+                    from recipe r 
+                    join ingredient i on i.recipe_id = r.id
+                    join nutrient n on n.ingredient_id = i.id
+                    where 
+	                  r.id = :id';
+
+        $rec = DB::select($strSQL, ['id' => $id]);
+        $recipe = [];
+        $i = 1;
+        foreach ($rec as $fullRecipe)
+        {
+            $recipe['name'] = $fullRecipe->recipe_name;
+            //if ($i == 1)
+                $recipe['ingredients'][$fullRecipe->ingredient_id] = $usda->getIngredientInfo($fullRecipe->ndbno);
+
+            $i++;
+            //dd($recipe);
+            //$nutrients[] = $fullRecipe->nutrient_id;
+        }
+    dd($recipe);
+        //$usda->getNutritionInfo($nutrients);
     }
 
     // FUNCTION FOR GET INGREDIENTS

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\URL;
 class Usda
 {
     private $reportURL = 'http://api.nal.usda.gov/ndb/reports/?';
+    private $nutritionURL = 'http://api.nal.usda.gov/ndb/nutrients/?';
     private $type = 'b';
     private $format = 'json';
     private $apiKey = '';
@@ -82,6 +83,22 @@ class Usda
     }
 
     /**
+     * @return string
+     */
+    public function getNutritionURL()
+    {
+        return $this->nutritionURL;
+    }
+
+    /**
+     * @param string $nutritionURL
+     */
+    public function setNutritionURL($nutritionURL)
+    {
+        $this->nutritionURL = $nutritionURL;
+    }
+
+    /**
      * Get all ingredient information
      *
      * @param USDA ID of ingredient
@@ -117,6 +134,7 @@ class Usda
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $server_output = curl_exec($ch);

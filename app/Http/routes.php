@@ -24,6 +24,7 @@ Route::group(['prefix' => 'api'], function() {
 
     Route::group(['prefix' => 'recipe', 'middleware' => 'verifyKey'], function() {
         Route::get('list', 'RecipeController@getList');
+        Route::get('get', 'RecipeController@getRecipe');
         Route::post('add', 'RecipeController@postAdd');
         Route::put('edit', 'RecipeController@putEdit');
         Route::delete('delete', 'RecipeController@delete');

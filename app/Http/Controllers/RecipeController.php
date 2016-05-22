@@ -37,6 +37,20 @@ class RecipeController extends Controller
         return json_encode($recipes);
     }
 
+    public function getRecipe(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = new Errors();
+            return $errors->getAsJSON($validator);
+        }
+
+        $this->recipe->getRecipe($request->key, $request->id);
+    }
+
     /**
      * Add a new recipe for user
      *
